@@ -15,6 +15,7 @@ VERSION=$(shell git describe --always --dirty)
 
 LDFLAGS = -X github.com/xtls/xray-core/core.build=$(VERSION) -s -w -buildid=
 PARAMS = -trimpath -ldflags "$(LDFLAGS)" -v
+DEBUGPARAM=-gcflags "all=-N -l" -trimpath -ldflags "$(LDFLAGS)" -v
 MAIN = ./main
 PREFIX ?= $(shell go env GOPATH)
 ifeq ($(GOOS),windows)
@@ -30,6 +31,10 @@ endif
 
 build:
 	go build -o $(OUTPUT) $(PARAMS) $(MAIN)
+	$(ADDITION)
+
+debug-build:
+	go build -o $(OUTPUT)-$@ $(DEBUGPARAM)  $(MAIN)
 	$(ADDITION)
 
 clean:
